@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -9,6 +10,12 @@ const DB_URL = process.env.DB_URL;
 
 // Middleware
 app.use(bodyParser.json());
+
+app.use(
+	cors({
+		origin: '*',
+	})
+);
 
 // MongoDB Connection
 mongoose
@@ -64,10 +71,28 @@ app.get('/api/stocks', async (req, res) => {
 
 // Get top 50 stocks by magic_formula_rank
 app.get('/api/stocks/top-magic-formula', async (req, res) => {
+	const limit = parseInt(req.query.limit) || 50;
+
 	try {
 		const stocks = await Stock.find()
 			.sort({ 'magic_formula_props.magic_formula_rank': 1 }) // 1 is the best rank
-			.limit(50);
+			.limit(limit);
+
+		res.json({ success: true, count: stocks.length, data: stocks });
+	} catch (error) {
+		console.error('Error fetching top stocks:', error);
+		res.status(500).json({ success: false, error: 'Server error' });
+	}
+});
+
+// Get top stocks by graham_rank
+app.get('/api/stocks/top-graham', async (req, res) => {
+	const limit = parseInt(req.query.limit) || 50;
+
+	try {
+		const stocks = await Stock.find()
+			.sort({ 'graham_props.graham_rank': 1 }) // 1 is the best rank
+			.limit(limit);
 
 		res.json({ success: true, count: stocks.length, data: stocks });
 	} catch (error) {
@@ -181,20 +206,6 @@ app.post('/api/stocks/search', async (req, res) => {
 		res.json({ success: true, count: stocks.length, data: stocks });
 	} catch (error) {
 		console.error('Error searching stocks:', error);
-		res.status(500).json({ success: false, error: 'Server error' });
-	}
-});
-
-// Get top 50 stocks by Graham rank
-app.get('/api/stocks/top-graham', async (req, res) => {
-	try {
-		const stocks = await Stock.find()
-			.sort({ 'graham_props.graham_rank': 1 }) // 1 is the best rank
-			.limit(50);
-
-		res.json({ success: true, count: stocks.length, data: stocks });
-	} catch (error) {
-		console.error('Error fetching top Graham stocks:', error);
 		res.status(500).json({ success: false, error: 'Server error' });
 	}
 });

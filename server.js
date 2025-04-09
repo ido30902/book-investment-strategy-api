@@ -29,6 +29,7 @@ mongoose
 // Define Stock Schema based on the new structure
 const stockSchema = new mongoose.Schema({
 	symbol: { type: String, required: true, unique: true },
+	price: { type: Number, default: 0 },
 	pe: { type: Number, default: 0 },
 	marketCap: { type: Number, default: 0 },
 	name: { type: String, required: true },
@@ -41,6 +42,8 @@ const stockSchema = new mongoose.Schema({
 		debt_to_equity: { type: Number, default: 0 },
 		book_value: { type: Number, default: 0 },
 		graham_rank: { type: Number, default: 0 },
+		eps: { type: Number, default: 0 },
+		intrinsic_value: { type: Number, default: 0 }
 	},
 	magic_formula_props: {
 		roa: { type: Number, default: 0 },

@@ -69,9 +69,17 @@ app.get('/api/stocks', async (req, res) => {
 	}
 });
 
+//Get stocks with limit
+app.get('/api/stocks/limit/:limit', async (req, res) => {
+	const limit = parseInt(req.params.limit) || 500;
+
+	const stocks = await Stock.find().limit(limit);
+	res.json({ success: true, count: stocks.length, data: stocks });
+});
+
 // Get top 50 stocks by magic_formula_rank
 app.get('/api/stocks/top-magic-formula', async (req, res) => {
-	const limit = parseInt(req.query.limit) || 50;
+	const limit = parseInt(req.query.limit) || 500;
 
 	try {
 		const stocks = await Stock.find()
@@ -87,7 +95,7 @@ app.get('/api/stocks/top-magic-formula', async (req, res) => {
 
 // Get top stocks by graham_rank
 app.get('/api/stocks/top-graham', async (req, res) => {
-	const limit = parseInt(req.query.limit) || 50;
+	const limit = parseInt(req.query.limit) || 500;
 
 	try {
 		const stocks = await Stock.find()

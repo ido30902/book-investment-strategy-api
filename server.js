@@ -37,10 +37,6 @@ const stockSchema = new mongoose.Schema({
 	logo_url: { type: String, default: '' },
 	sector: { type: String, default: '' },
 	graham_props: {
-		graham_score: { type: Number, default: 0 },
-		current_ratio: { type: Number, default: 0 },
-		debt_to_equity: { type: Number, default: 0 },
-		book_value: { type: Number, default: 0 },
 		graham_rank: { type: Number, default: 0 },
 		eps: { type: Number, default: 0 },
 		intrinsic_value: { type: Number, default: 0 },

@@ -44,12 +44,12 @@ const stockSchema = new mongoose.Schema({
 		graham_rank: { type: Number, default: 0 },
 		eps: { type: Number, default: 0 },
 		intrinsic_value: { type: Number, default: 0 },
-		valuation: { type: Number, default: 0 }
 	},
 	magic_formula_props: {
-		roa: { type: Number, default: 0 },
-		magic_formula_rank: { type: Number, default: 0 }
-	}
+		roc: { type: Number, default: 0 },
+		ey: { type: Number, default: 0 },
+		magic_formula_rank: { type: Number, default: 0 },
+	},
 });
 
 // Create model

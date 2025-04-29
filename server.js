@@ -49,8 +49,13 @@ const stockSchema = new mongoose.Schema({
 	},
 });
 
+const utilSchema = new mongoose.Schema({
+	last_updated: { type: String, required: true },
+});
+
 // Create model
 const Stock = mongoose.model('Stock', stockSchema, 'stocks');
+const Util = mongoose.model('Util', utilSchema, 'util');
 
 // Routes
 
@@ -203,14 +208,6 @@ app.get('/api/stocks/sector/:sectorName', async (req, res) => {
 });
 
 app.get('/api/last-updated', async (req, res) => {
-	const Util = mongoose.model(
-		'util',
-		new mongoose.Schema({
-			last_updated: { type: String, required: true },
-		}),
-		'util'
-	);
-
 	const lastUpdated = await Util.findOne({});
 	res.json({
 		success: true,

@@ -13,7 +13,8 @@ app.use(bodyParser.json());
 
 app.use(
 	cors({
-		origin: '*',
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+		allowedHeaders: ['*'],
 	})
 );
 
@@ -77,41 +78,10 @@ app.get('/api/stocks/limit/:limit', async (req, res) => {
 	res.json({ success: true, count: stocks.length, data: stocks });
 });
 
-// Get top 50 stocks by magic_formula_rank
-app.get('/api/stocks/top-magic-formula', async (req, res) => {
-	const limit = parseInt(req.query.limit) || 500;
-
-	try {
-		const stocks = await Stock.find()
-			.sort({ 'magic_formula_props.magic_formula_rank': 1 }) // 1 is the best rank
-			.limit(limit);
-
-		res.json({ success: true, count: stocks.length, data: stocks });
-	} catch (error) {
-		console.error('Error fetching top stocks:', error);
-		res.status(500).json({ success: false, error: 'Server error' });
-	}
-});
-
-// Get top stocks by graham_rank
-app.get('/api/stocks/top-graham', async (req, res) => {
-	const limit = parseInt(req.query.limit) || 500;
-
-	try {
-		const stocks = await Stock.find()
-			.sort({ 'graham_props.graham_rank': 1 }) // 1 is the best rank
-			.limit(limit);
-
-		res.json({ success: true, count: stocks.length, data: stocks });
-	} catch (error) {
-		console.error('Error fetching top stocks:', error);
-		res.status(500).json({ success: false, error: 'Server error' });
-	}
-});
-
 // Get a specific stock by symbol
 app.get('/api/stocks/:symbol', async (req, res) => {
 	try {
+		console.log(req.params.symbol);
 		const stock = await Stock.findOne({
 			symbol: req.params.symbol.toUpperCase(),
 		});
@@ -230,6 +200,11 @@ app.get('/api/stocks/sector/:sectorName', async (req, res) => {
 		console.error('Error fetching stocks by sector:', error);
 		res.status(500).json({ success: false, error: 'Server error' });
 	}
+});
+
+app.get('/api/last-updated', async (req, res) => {
+	const lastUpdated = await Stock.findOne({}).sort({ last_updated: -1 });
+	res.json({ success: true, data: lastUpdated });
 });
 
 // Start server

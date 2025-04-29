@@ -203,8 +203,19 @@ app.get('/api/stocks/sector/:sectorName', async (req, res) => {
 });
 
 app.get('/api/last-updated', async (req, res) => {
-	const lastUpdated = await Stock.findOne({}).sort({ last_updated: -1 });
-	res.json({ success: true, data: lastUpdated });
+	const Util = mongoose.model(
+		'util',
+		new mongoose.Schema({
+			last_updated: { type: String, required: true },
+		}),
+		'util'
+	);
+
+	const lastUpdated = await Util.findOne({});
+	res.json({
+		success: true,
+		data: { last_updated: lastUpdated.last_updated },
+	});
 });
 
 // Start server

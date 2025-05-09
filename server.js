@@ -86,7 +86,6 @@ app.get('/api/stocks/limit/:limit', async (req, res) => {
 // Get a specific stock by symbol
 app.get('/api/stocks/:symbol', async (req, res) => {
 	try {
-		console.log(req.params.symbol);
 		const stock = await Stock.findOne({
 			symbol: req.params.symbol.toUpperCase(),
 		});
